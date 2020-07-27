@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import pyttsx3
 import requests
 from twilio.rest import Client
+import speech_recognition as sr
 from creds import account_sid, auth_token, cell, twillio_num
 class news_app:
     def __init__(self):
@@ -303,11 +304,25 @@ final_string = "Good morning, the current temperature is: " + str(assistant.get_
 engine = pyttsx3.init()
 engine.setProperty('rate', 170)
 voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id) 
+try:
+    engine.setProperty('voice', voices[1].id)
+except:
+    engine.setProperty('voice', voices[0].id)
 
 engine.say(final_string)
-
 engine.runAndWait()
+
+engine.say("May I start the wakeup protocol? ")
+engine.runAndWait()
+r = sr.Recognizer()
+with sr.Microphone() as source:
+    audio_data = r.record(source, duration=5)
+    engine.say("Hang on while I process that")
+    engine.runAndWait()
+    text = r.recognize_google(audio_data)
+
+if(text == 'yes' or text == 'Yes'):
+    print("Lights on")
 
 # client = Client(account_sid, auth_token)
 
