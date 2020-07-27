@@ -296,34 +296,38 @@ class news_app:
           
 assistant = news_app()
 
-final_string = "Good morning, the current temperature is: " + str(assistant.get_weather() + "\n" + "The next Toronto Maple Leafs game will be: " +
-     str(assistant.hockey_team_decoder(assistant.next_leafs_game()))) + "\nThe next Toronto Blue Jays game will be: " + str(assistant.baseball_team_decoder(assistant.next_jays_game()))
+# final_string = "Good morning, the current temperature is: " + str(assistant.get_weather() + "\n" + "The next Toronto Maple Leafs game will be: " +
+    #  str(assistant.hockey_team_decoder(assistant.next_leafs_game()))) + "\nThe next Toronto Blue Jays game will be: " + str(assistant.baseball_team_decoder(assistant.next_jays_game()))
 
 # assistant.hockey_team_decoder(assistant.next_leafs_game())
 # print(final_string)
+
+
 engine = pyttsx3.init()
+
 engine.setProperty('rate', 170)
 voices = engine.getProperty('voices')
 try:
     engine.setProperty('voice', voices[1].id)
 except:
     engine.setProperty('voice', voices[0].id)
+engine.say("Good morning, the current weather is " + str(assistant.get_weather()) + ". How may I assist you today?")
 
-engine.say(final_string)
 engine.runAndWait()
 
-engine.say("May I start the wakeup protocol? ")
+
 engine.runAndWait()
 r = sr.Recognizer()
-with sr.Microphone() as source:
-    audio_data = r.record(source, duration=5)
-    engine.say("Hang on while I process that")
-    engine.runAndWait()
-    text = r.recognize_google(audio_data)
-
-if(text == 'yes' or text == 'Yes'):
-    print("Lights on")
-
-# client = Client(account_sid, auth_token)
-
-# message = client.messages.create(body=final_string,from_=twillio_num,to=cell)
+running = True
+while running is True:
+    with sr.Microphone() as source:
+        audio_data = r.record(source, duration=5)
+        engine.say("Hang on while I process that")
+        engine.runAndWait()
+    try:
+        text = r.recognize_google(audio_data)
+        print(text)
+        running = False
+    except:
+        engine.say("I am sorry, I did not quite get that. Please try again.")
+        engine.runAndWait()
