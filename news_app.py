@@ -1,5 +1,4 @@
 from bs4 import BeautifulSoup
-import pyttsx3
 import requests
 from twilio.rest import Client
 from creds import account_sid, auth_token, cell, twillio_num
@@ -298,17 +297,7 @@ assistant = news_app()
 final_string = "Good morning, the current temperature is: " + str(assistant.get_weather() + "\n" + "The next Toronto Maple Leafs game will be: " +
      str(assistant.hockey_team_decoder(assistant.next_leafs_game()))) + "\nThe next Toronto Blue Jays game will be: " + str(assistant.baseball_team_decoder(assistant.next_jays_game()))
 
-# assistant.hockey_team_decoder(assistant.next_leafs_game())
-# print(final_string)
-engine = pyttsx3.init()
-engine.setProperty('rate', 170)
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id) 
 
-engine.say(final_string)
+client = Client(account_sid, auth_token)
 
-engine.runAndWait()
-
-# client = Client(account_sid, auth_token)
-
-# message = client.messages.create(body=final_string,from_=twillio_num,to=cell)
+message = client.messages.create(body=final_string,from_=twillio_num,to=cell)
