@@ -333,29 +333,22 @@ while running is True:
             engine.say("The Toronto Maple leafs will play " + str(assistant.hockey_team_decoder(assistant.next_leafs_game()))  + ". The Toronto Blue"+
         " Jays will play " +str(assistant.baseball_team_decoder(assistant.next_jays_game())) +".")
             engine.runAndWait()
-        
+        elif(text.find("Weather") != -1 or text.find("weather") != -1 ):
+            engine.say("the current weather is " + str(assistant.get_weather()))
+            engine.runAndWait()
 
         ### breakout protocol #####
         engine.say("May I help with anything else today?")
         engine.runAndWait()
         text = r.recognize_google(record_audio())
         if(text == "no" or text == 'No'):
+            engine.say("Thank you, enjoy your day!")
+            engine.runAndWait()
             running = False
         else:
             running = True
     except:
         engine.say("I am sorry, I did not quite get that. Please try again.")
         engine.runAndWait()
-
-   
-    # text = r.recognize_google(audio_data)
-    # if(text == 'Sports' or text == 'sports'):
-    #     engine.say("The Toronto Maple leafs will play " + str(assistant.hockey_team_decoder(assistant.next_leafs_game()))  + ". The Toronto Blue"+
-    #     " Jays will play " +str(assistant.baseball_team_decoder(assistant.next_jays_game())) +".") 
-    #     engine.runAndWait()
-    # running = False
-    # print(running)
-    # engine.say("I am sorry, I did not quite get that. Please try again.")
-    # engine.runAndWait()
 
     
