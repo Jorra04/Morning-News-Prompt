@@ -302,6 +302,12 @@ assistant = news_app()
 # assistant.hockey_team_decoder(assistant.next_leafs_game())
 # print(final_string)
 
+def record_audio():
+    with sr.Microphone() as source:
+        audio_data = r.record(source, duration=5)
+        engine.say("Hang on while I process that")
+        engine.runAndWait()
+        return audio_data
 
 engine = pyttsx3.init()
 
@@ -320,14 +326,36 @@ engine.runAndWait()
 r = sr.Recognizer()
 running = True
 while running is True:
-    with sr.Microphone() as source:
-        audio_data = r.record(source, duration=5)
-        engine.say("Hang on while I process that")
-        engine.runAndWait()
+
     try:
-        text = r.recognize_google(audio_data)
-        print(text)
-        running = False
+        text = r.recognize_google(record_audio())
+        if(text.find('Sports') != -1  or text.find('sports') != -1):
+            engine.say("The Toronto Maple leafs will play " + str(assistant.hockey_team_decoder(assistant.next_leafs_game()))  + ". The Toronto Blue"+
+        " Jays will play " +str(assistant.baseball_team_decoder(assistant.next_jays_game())) +".")
+            engine.runAndWait()
+        
+
+        ### breakout protocol #####
+        engine.say("May I help with anything else today?")
+        engine.runAndWait()
+        text = r.recognize_google(record_audio())
+        if(text == "no" or text == 'No'):
+            running = False
+        else:
+            running = True
     except:
         engine.say("I am sorry, I did not quite get that. Please try again.")
         engine.runAndWait()
+
+   
+    # text = r.recognize_google(audio_data)
+    # if(text == 'Sports' or text == 'sports'):
+    #     engine.say("The Toronto Maple leafs will play " + str(assistant.hockey_team_decoder(assistant.next_leafs_game()))  + ". The Toronto Blue"+
+    #     " Jays will play " +str(assistant.baseball_team_decoder(assistant.next_jays_game())) +".") 
+    #     engine.runAndWait()
+    # running = False
+    # print(running)
+    # engine.say("I am sorry, I did not quite get that. Please try again.")
+    # engine.runAndWait()
+
+    
