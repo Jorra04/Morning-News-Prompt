@@ -6,6 +6,7 @@ import speech_recognition as sr
 from creds import account_sid, auth_token, cell, twillio_num
 from phue import Bridge
 from playsound import playsound
+from basic_calculator import basic_calculator
 class news_app:
     def __init__(self):
         self.__message = ""
@@ -306,8 +307,22 @@ def record_audio():
         print(text)
         return audio_data
 
-engine = pyttsx3.init()
+def calculate_expression(text,calc):
+    text.split()
+    val = 0
+    arr = text.split()
+    if(arr[1] == '+'):
+        val = calc.add(arr[0], arr[2])
+    elif(arr[1] == '-'):
+        val = calc.sub(arr[0], arr[2])
+    elif(arr[1] == '*'):
+        val = calc.multiply(arr[0], arr[2])
+    elif(arr[1] == '/'):
+        val = calc.divide(arr[0], arr[2])
+    return val
 
+engine = pyttsx3.init()
+calc = basic_calculator()
 engine.setProperty('rate', 170)
 voices = engine.getProperty('voices')
 try:
@@ -317,6 +332,7 @@ except:
 engine.say("Good morning, the current weather is " + str(assistant.get_weather()) + ". How may I assist you today?")
 
 engine.runAndWait()
+playsound("R2.mp3")
 r = sr.Recognizer()
 running = True
 while running is True:
@@ -330,6 +346,12 @@ while running is True:
         elif(text.find("Weather") != -1 or text.find("weather") != -1 ):
             engine.say("the current weather is " + str(assistant.get_weather()))
             engine.runAndWait()
+        elif(text.find("Calculate") != -1 or text.find("calculate") != -1 ):
+            engine.say("What calculation may I help with")
+            engine.runAndWait()
+            text = r.recognize_google(record_audio())
+            engine.say(str(calculate_expression(text,calc)))
+            engine.runAndWait()
         elif(text == "Terminate" or text == "terminate"):
             engine.say("Shutting down all systems.")
             engine.runAndWait()
@@ -337,9 +359,11 @@ while running is True:
 
         ### breakout protocol #####
         engine.say("May I help with anything else today?")
+        
         engine.runAndWait()
+        playsound("R2.mp3")
         text = r.recognize_google(record_audio())
-        print(text)
+        
         if(text == "no" or text == "No"):
             engine.say("Thank you, enjoy your day!")
             engine.runAndWait()
@@ -351,5 +375,3 @@ while running is True:
     except:
         engine.say("I am sorry, I did not quite get that. Please try again.")
         engine.runAndWait()
-
-    
