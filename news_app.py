@@ -4,6 +4,7 @@ import requests
 from twilio.rest import Client
 import speech_recognition as sr
 from creds import account_sid, auth_token, cell, twillio_num
+from creds import relative_sound_path as rsp
 from playsound import playsound
 from basic_calculator import basic_calculator
 class news_app:
@@ -331,7 +332,7 @@ except:
 engine.say("Good morning, the current weather is " + str(assistant.get_weather()) + ". How may I assist you today?")
 
 engine.runAndWait()
-# playsound("listening.mp3")
+playsound(rsp+'listening.mp3')
 r = sr.Recognizer()
 running = True
 while running is True:
@@ -348,7 +349,7 @@ while running is True:
         elif(text.find("Calculate") != -1 or text.find("calculate") != -1 ):
             engine.say("What calculation may I help with")
             engine.runAndWait()
-            playsound("listening.mp3")
+            playsound(rsp+'listening.mp3')
             text = r.recognize_google(record_audio())
             engine.say(str(calculate_expression(text,calc)))
             engine.runAndWait()
@@ -357,11 +358,11 @@ while running is True:
             engine.runAndWait()
             break
 
-        ### breakout protocol #####
+        #### breakout protocol #####
         engine.say("May I help with anything else today?")
         
         engine.runAndWait()
-        playsound("listening.mp3")
+        playsound(rsp+'listening.mp3')
         text = r.recognize_google(record_audio())
         
         if(text == "no" or text == "No"):
@@ -371,9 +372,9 @@ while running is True:
         else:
             engine.say("I am listening")
             engine.runAndWait()
-            playsound("listening.mp3")
+            playsound(rsp+'listening.mp3')
             running = True
     except:
         engine.say("I am sorry, I did not quite get that. Please try again.")
         engine.runAndWait()
-        playsound("listening.mp3")
+        playsound(rsp+'listening.mp3')
