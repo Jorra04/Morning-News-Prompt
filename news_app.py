@@ -4,6 +4,8 @@ import requests
 from twilio.rest import Client
 import speech_recognition as sr
 from creds import account_sid, auth_token, cell, twillio_num
+from phue import Bridge
+from playsound import playsound
 class news_app:
     def __init__(self):
         self.__message = ""
@@ -296,17 +298,12 @@ class news_app:
           
 assistant = news_app()
 
-# final_string = "Good morning, the current temperature is: " + str(assistant.get_weather() + "\n" + "The next Toronto Maple Leafs game will be: " +
-    #  str(assistant.hockey_team_decoder(assistant.next_leafs_game()))) + "\nThe next Toronto Blue Jays game will be: " + str(assistant.baseball_team_decoder(assistant.next_jays_game()))
-
-# assistant.hockey_team_decoder(assistant.next_leafs_game())
-# print(final_string)
 
 def record_audio():
     with sr.Microphone() as source:
-        audio_data = r.record(source, duration=5)
-        engine.say("Hang on while I process that")
-        engine.runAndWait()
+        audio_data = r.record(source, duration=3)
+        text = r.recognize_google(audio_data)
+        print(text)
         return audio_data
 
 engine = pyttsx3.init()
@@ -318,9 +315,6 @@ try:
 except:
     engine.setProperty('voice', voices[0].id)
 engine.say("Good morning, the current weather is " + str(assistant.get_weather()) + ". How may I assist you today?")
-
-engine.runAndWait()
-
 
 engine.runAndWait()
 r = sr.Recognizer()
@@ -336,16 +330,23 @@ while running is True:
         elif(text.find("Weather") != -1 or text.find("weather") != -1 ):
             engine.say("the current weather is " + str(assistant.get_weather()))
             engine.runAndWait()
+        elif(text == "Terminate" or text == "terminate"):
+            engine.say("Shutting down all systems.")
+            engine.runAndWait()
+            break
 
         ### breakout protocol #####
         engine.say("May I help with anything else today?")
         engine.runAndWait()
         text = r.recognize_google(record_audio())
-        if(text == "no" or text == 'No'):
+        print(text)
+        if(text == "no" or text == "No"):
             engine.say("Thank you, enjoy your day!")
             engine.runAndWait()
             running = False
         else:
+            engine.say("I am listening")
+            engine.runAndWait()
             running = True
     except:
         engine.say("I am sorry, I did not quite get that. Please try again.")
